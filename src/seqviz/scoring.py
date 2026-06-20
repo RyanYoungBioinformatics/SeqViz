@@ -2,7 +2,7 @@ MATCH = 1
 MISMATCH = -1
 GAP = -2
 
-def score(a: str, b: str, match: int = MATCH, mismatch: int = MISMATCH) -> int:
+def scoring(a: str, b: str, match: int = MATCH, mismatch: int = MISMATCH) -> int:
     """
     Calculate score for two sequences, a and b.
     
