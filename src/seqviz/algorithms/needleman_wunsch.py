@@ -1,5 +1,5 @@
 import numpy as np
-from seqviz.scoring import score, GAP, MATCH, MISMATCH
+from seqviz.scoring import scoring, GAP, MATCH, MISMATCH
 
 
 def fill_matrix(seq1: str, seq2: str, gap: int = GAP) -> np.ndarray:
@@ -16,7 +16,7 @@ def fill_matrix(seq1: str, seq2: str, gap: int = GAP) -> np.ndarray:
 
     for i in range(1, rows):
         for j in range(1, cols):
-            diagonal = matrix[i-1][j-1] + score(seq1[i-1], seq2[j-1])
+            diagonal = matrix[i-1][j-1] + scoring(seq1[i-1], seq2[j-1], MATCH, MISMATCH)
             up       = matrix[i-1][j]   + gap
             left     = matrix[i][j-1]   + gap
             matrix[i][j] = max(diagonal, up, left)
@@ -31,7 +31,7 @@ def traceback(matrix: np.ndarray, seq1: str, seq2: str, gap: int = GAP):
     i, j = len(seq1), len(seq2)
 
     while i > 0 or j > 0:
-        if i > 0 and j > 0 and matrix[i][j] == matrix[i-1][j-1] + score(seq1[i-1], seq2[j-1]):
+        if i > 0 and j > 0 and matrix[i][j] == matrix[i-1][j-1] + scoring(seq1[i-1], seq2[j-1], MATCH, MISMATCH):
             aligned1 = seq1[i-1] + aligned1
             aligned2 = seq2[j-1] + aligned2
             i -= 1
