@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "SeqViz"
+name = "seqviz"
 version = "0.1.0"
 description = "CLI tool for DNA/protein sequence alignment using Needleman-Wunsch & Smith-Waterman, with heatmap and terminal visualisation"
 readme = "README.md"
@@ -31,24 +31,24 @@ classifiers = [
 requires-python = ">=3.11"
 
 dependencies = [
-  "click>=8.1.0"            # CLI argument parsing
-  "typer>=0.12.0",          # CLI argument parsing, built on Click
-  "rich>=13.7.0",           # Coloured terminal output for match/mismatch/gap
-  "numpy>=1.26.0",          # Scoring matrix maths
-  "matplotlib>=3.8.0",      # Heatmap rendering
-  "seaborn>=0.13.0",        # Nicer heatmap styling on top of matplotlib
+  "click>=8.1.0",
+  "typer>=0.12.0",
+  "rich>=13.7.0",
+  "numpy>=1.26.0",
+  "matplotlib>=3.8.0",
+  "seaborn>=0.13.0",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8.2.0",
   "pytest-cov>=5.0.0",
-  "ruff>=0.4.0",            # Linter + formatter (replaces flake8 + black)
-  "mypy>=1.10.0",           # Type checking
+  "ruff>=0.4.0",
+  "mypy>=1.10.0",
 ]
 
 [project.scripts]
-SeqViz = "SeqViz.cli:app"  # `SeqViz align ACGT TGCA` in your terminal
+seqviz = "seqviz.cli:main"
 
 [project.urls]
 Homepage   = "https://github.com/BarefootRobber/SeqViz"
@@ -56,14 +56,14 @@ Repository = "https://github.com/BarefootRobber/SeqViz"
 Issues     = "https://github.com/BarefootRobber/SeqViz/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/SeqViz"]
+packages = ["src/seqviz"]
 
 [tool.ruff]
 line-length    = 88
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "W"]  # errors, pyflakes, isort, naming, warnings
+select = ["E", "F", "I", "N", "W"]
 
 [tool.mypy]
 python_version      = "3.11"
@@ -72,4 +72,4 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts   = "--cov=SeqViz --cov-report=term-missing"
+addopts   = "--cov=seqviz --cov-report=term-missing"
