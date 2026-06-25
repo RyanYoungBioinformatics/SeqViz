@@ -3,16 +3,7 @@ from seqviz.scoring import MATCH, MISMATCH, GAP
 from seqviz.algorithms import needleman_wunsch as nw
 from seqviz.algorithms import smith_waterman as sw
 from seqviz.visualise.heatmap import plot_matrix
-
-def print_alignment(label: str, aligned1: str, aligned2: str, score: int):
-    """Print a single alignment result cleanly to the terminal."""
-    width = max(len(aligned1), 40)
-    click.echo(f"\n{'=' * (width + 4)}")
-    click.echo(f"  {label}")
-    click.echo(f"{'=' * (width + 4)}")
-    click.echo(f"  Sequence 1 : {aligned1}")
-    click.echo(f"  Sequence 2 : {aligned2}")
-    click.echo(f"  Score      : {score}")
+from seqviz.visualise.terminal import print_alignment
 
 
 @click.command()
@@ -116,7 +107,7 @@ def main(seq1, seq2, algorithm, match_score, mismatch_score, gap_penalty, output
 
     # Heatmap stub
     for label, (a1, a2, matrix, score) in results.items():
-        print_alignment(label, a1, a2, score)
+        print_alignment(a1, a2, label=label, score=score)
 
         if output:
             if algorithm == "both":
