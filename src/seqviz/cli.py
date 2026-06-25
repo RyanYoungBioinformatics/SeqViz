@@ -2,7 +2,7 @@ import click
 from seqviz.scoring import MATCH, MISMATCH, GAP
 from seqviz.algorithms import needleman_wunsch as nw
 from seqviz.algorithms import smith_waterman as sw
-
+from seqviz.visualise.heatmap import plot_matrix
 
 def print_alignment(label: str, aligned1: str, aligned2: str, score: int):
     """Print a single alignment result cleanly to the terminal."""
@@ -111,12 +111,25 @@ def main(seq1, seq2, algorithm, match_score, mismatch_score, gap_penalty, output
         results["Smith-Waterman (Local)"] = (a1, a2, matrix, score)
 
     # Print each result
+    #for label, (a1, a2, matrix, score) in results.items():
+        #print_alignment(label, a1, a2, score)
+
+    # Heatmap stub
     for label, (a1, a2, matrix, score) in results.items():
         print_alignment(label, a1, a2, score)
 
-    # Heatmap stub
     if output:
-        click.echo(f"\nHeatmap will be saved to: {output}")
+        if algorithm == "both":
+            suffix = "_nw" if "Needleman" in label else "_sw"
+            base, ext = output.rsplit(".", 1)
+            save_path = f"{base}{suffix}.{ext}"
+        else:
+            save_path = output
+
+        saved_to = plot_matrix(matrix, seq1, seq2, title=label, output_path=save_path)
+        click.echo(f"\n  Heatmap saved → {saved_to}")
+    else:
+        plot_matrix(matrix, seq1, seq2, title=label)
 
 
 if __name__ == "__main__":
