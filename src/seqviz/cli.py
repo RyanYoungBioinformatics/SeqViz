@@ -118,18 +118,18 @@ def main(seq1, seq2, algorithm, match_score, mismatch_score, gap_penalty, output
     for label, (a1, a2, matrix, score) in results.items():
         print_alignment(label, a1, a2, score)
 
-    if output:
-        if algorithm == "both":
-            suffix = "_nw" if "Needleman" in label else "_sw"
-            base, ext = output.rsplit(".", 1)
-            save_path = f"{base}{suffix}.{ext}"
-        else:
-            save_path = output
+        if output:
+            if algorithm == "both":
+                suffix = "_nw" if "Needleman" in label else "_sw"
+                base, ext = output.rsplit(".", 1)
+                save_path = f"{base}{suffix}.{ext}"
+            else:
+                save_path = output
 
-        saved_to = plot_matrix(matrix, seq1, seq2, title=label, output_path=save_path)
-        click.echo(f"\n  Heatmap saved → {saved_to}")
-    else:
-        plot_matrix(matrix, seq1, seq2, title=label)
+            saved_to = plot_matrix(matrix, seq1, seq2, title=label, output_path=save_path)
+            click.echo(f"\n  Heatmap saved → {saved_to}")
+        else:
+            plot_matrix(matrix, seq1, seq2, title=label)
 
 
 if __name__ == "__main__":
