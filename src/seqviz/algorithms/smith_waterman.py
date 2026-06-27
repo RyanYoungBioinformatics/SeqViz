@@ -2,7 +2,7 @@ import numpy as np
 from seqviz.scoring import scoring, GAP, MATCH, MISMATCH
 
 
-def fill_matrix(seq1: str, seq2: str, gap: int = GAP) -> np.ndarray:
+def fill_matrix(seq1: str, seq2: str, match: int = MATCH, mismatch: int = MISMATCH, gap: int = GAP) -> np.ndarray:
     """
     Build and fill the Smith-Waterman scoring matrix.
     Scores are floored at zero — poor alignments simply reset rather than
@@ -16,7 +16,7 @@ def fill_matrix(seq1: str, seq2: str, gap: int = GAP) -> np.ndarray:
 
     for i in range(1, rows):
         for j in range(1, cols):
-            diagonal = matrix[i-1][j-1] + scoring(seq1[i-1], seq2[j-1], MATCH, MISMATCH)
+            diagonal = matrix[i-1][j-1] + scoring(seq1[i-1], seq2[j-1], match, mismatch)
             up       = matrix[i-1][j]   + gap
             left     = matrix[i][j-1]   + gap
 
@@ -25,7 +25,7 @@ def fill_matrix(seq1: str, seq2: str, gap: int = GAP) -> np.ndarray:
     return matrix
 
 
-def traceback(matrix: np.ndarray, seq1: str, seq2: str, gap: int = GAP):
+def traceback(matrix: np.ndarray, seq1: str, seq2: str, match: int = MATCH, mismatch: int = MISMATCH, gap: int = GAP):
     """
     Walk back from the highest-scoring cell, stopping the moment we hit zero.
     That zero boundary is what makes the alignment local — we only capture
@@ -38,7 +38,7 @@ def traceback(matrix: np.ndarray, seq1: str, seq2: str, gap: int = GAP):
     i, j = np.unravel_index(np.argmax(matrix), matrix.shape)
 
     while matrix[i][j] > 0:
-        if matrix[i][j] == matrix[i-1][j-1] + scoring(seq1[i-1], seq2[j-1], MATCH, MISMATCH):
+        if matrix[i][j] == matrix[i-1][j-1] + scoring(seq1[i-1], seq2[j-1], match, mismatch):
             aligned1 = seq1[i-1] + aligned1
             aligned2 = seq2[j-1] + aligned2
             i -= 1
@@ -55,6 +55,20 @@ def traceback(matrix: np.ndarray, seq1: str, seq2: str, gap: int = GAP):
     return aligned1, aligned2
 
 
+def _validate_sequence(seq: str) -> None:
+    """Validate sequence is non-empty and contains only valid characters."""
+    if not seq:
+        raise ValueError("Sequence cannot be empty")
+    
+    # Valid DNA and protein characters (IUPAC ambiguity codes included)
+    valid_chars = set("ATCGRYSWKMBDHVNACDEFGHIKLMNPQRSTVWYBZOUEX")
+    seq_upper = seq.upper()
+    
+    invalid_chars = set(seq_upper) - valid_chars
+    if invalid_chars:
+        raise ValueError(f"Invalid characters in sequence: {invalid_chars}")
+
+
 def align(
     seq1: str,
     seq2: str,
@@ -66,8 +80,11 @@ def align(
     Run full Smith-Waterman local alignment.
     Returns aligned subsequences, the full scoring matrix, and the best score.
     """
-    matrix = fill_matrix(seq1, seq2, gap)
-    aligned1, aligned2 = traceback(matrix, seq1, seq2, gap)
+    _validate_sequence(seq1)
+    _validate_sequence(seq2)
+    
+    matrix = fill_matrix(seq1, seq2, match, mismatch, gap)
+    aligned1, aligned2 = traceback(matrix, seq1, seq2, match, mismatch, gap)
     best_score = int(np.max(matrix))
 
     return aligned1, aligned2, matrix, best_score

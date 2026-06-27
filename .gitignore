@@ -221,5 +221,5 @@ __marimo__/
 .DS_Store
 **/.DS_Store
 
-# Tests
-tests/*
+# Test matrices and other test artifacts
+outputs/*
