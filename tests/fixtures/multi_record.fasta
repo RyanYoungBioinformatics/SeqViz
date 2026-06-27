@@ -1,0 +1,4 @@
+>record_one First record
+ATGCATGCATGC
+>record_two Second record — should be ignored by read_fasta()
+TTTTAAAACCCC

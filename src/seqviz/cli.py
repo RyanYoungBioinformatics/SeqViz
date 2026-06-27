@@ -2,6 +2,7 @@ import click
 from seqviz.scoring import MATCH, MISMATCH, GAP
 from seqviz.algorithms import needleman_wunsch as nw
 from seqviz.algorithms import smith_waterman as sw
+from seqviz.fasta_utils import read_fasta
 from seqviz.visualise.heatmap import plot_matrix
 from seqviz.visualise.terminal import print_alignment
 
@@ -9,13 +10,25 @@ from seqviz.visualise.terminal import print_alignment
 @click.command()
 @click.option(
     "--seq1",
-    required=True,
-    help="First DNA or protein sequence  e.g. GATTACA",
+    default=None,
+    help="First DNA or protein sequence e.g. GATTACA (or use --file1)",
 )
 @click.option(
     "--seq2",
-    required=True,
-    help="Second DNA or protein sequence  e.g. GCATGCU",
+    default=None,
+    help="Second DNA or protein sequence e.g. GCATGCU (or use --file2)",
+)
+@click.option(
+    "--file1",
+    default=None,
+    type=click.Path(exists=True, dir_okay=False, readable=True),
+    help="Path to a FASTA file containing the first sequence",
+)
+@click.option(
+    "--file2",
+    default=None,
+    type=click.Path(exists=True, dir_okay=False, readable=True),
+    help="Path to a FASTA file containing the second sequence",
 )
 @click.option(
     "--algorithm",
@@ -61,18 +74,29 @@ from seqviz.visualise.terminal import print_alignment
     show_default=True,
     help="Sequence mode — protein mode uses simple scoring for now",
 )
-def main(seq1, seq2, algorithm, match_score, mismatch_score, gap_penalty, output, mode):
+def main(seq1, seq2, file1, file2, algorithm, match_score, mismatch_score, gap_penalty, output, mode):
     """
     SeqViz — Sequence Alignment Visualiser
 
     Align two DNA or protein sequences using Needleman-Wunsch (global)
     and/or Smith-Waterman (local) algorithms.
 
-    Produces a visual scoring matrix heatmap and highlighted terminal output.
+    Inputs may be provided as inline sequences via --seq1/--seq2 or as FASTA files
+    via --file1/--file2.
     """
-    # Normalise to uppercase — forgives lowercase input
-    seq1 = seq1.upper()
-    seq2 = seq2.upper()
+    if file1:
+        seq1 = read_fasta(file1)
+    elif not seq1:
+        raise click.UsageError("Provide --seq1 or --file1")
+    else:
+        seq1 = seq1.upper()
+
+    if file2:
+        seq2 = read_fasta(file2)
+    elif not seq2:
+        raise click.UsageError("Provide --seq2 or --file2")
+    else:
+        seq2 = seq2.upper()
 
     if mode == "protein":
         click.echo(
