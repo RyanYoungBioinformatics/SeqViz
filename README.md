@@ -125,9 +125,7 @@ Options:
 
 ### Heatmap — Gallus gallus vs Columba livia (cytochrome b, NW)
 
-> *(replace with your actual heatmap output from Day 7–8)*
-
-![Heatmap example](docs/assets/heatmap_nw_example.png)
+/README_screenshots/chicken_vs_pigeon.png
 
 The colour gradient runs from **dark blue** (low / negative score) through
 **white** (neutral) to **dark red** (high match score). The diagonal streak
