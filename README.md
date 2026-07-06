@@ -1,2 +1,280 @@
-# SeqViz
-Sequences Alignment Visualiser that uses Needleman-Wunsch and Smith-Waterman algorithms to produce a visual heat-map and match/mismatch/gap highlights.
+# SeqViz 🧬
+
+**Pairwise DNA sequence alignment and heatmap visualisation from the command line.**
+
+Python · Needleman-Wunsch · Smith-Waterman · Biopython · Matplotlib
+
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)]()
+[![Development Status](https://img.shields.io/badge/status-alpha-orange)]()
+
+---
+
+## What It Does
+SeqViz is capable of taking two seperate DNA sequences, either typed into the terminal or loaded from standard .fasta files. Then aligning these sequences using two well known, and tested, algorithms in bioinformatics. It then renders a heatmap image to visualise the difference between your sequences as a heatmap image and prints the alignment to your terminal for quick and easy visual identification of where the match/mismatch and gaps are and how strong the connection is between DNA sequences. You can compare two genes from the same species, or track evolotionary divergence of two seperate species using cytochrome b with this tool. SeqViz gives a numerical and visual answer to you with a simple command in your terminal and does it locally.
+
+---
+
+## Installation
+
+**Requirements:** Python 3.11 or higher.
+
+# 1. Clone the repository
+git clone https://github.com/BarefootRobber/SeqViz.git
+cd SeqViz
+
+# 2. Create and activate a virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate        # macOS / Linux
+.venv\Scripts\activate           # Windows
+
+# 3. Install SeqViz and all dependencies
+pip install -e ".[dev]"
+
+# 4. Confirm the install worked
+seqviz --help
+
+**Dependencies installed automatically:**
+
+| Package | Purpose |
+|---|---|
+| `biopython` | FASTA file parsing |
+| `numpy` | Scoring matrix construction |
+| `matplotlib` + `seaborn` | Heatmap rendering |
+| `rich` | Formatted terminal output |
+| `click` | CLI argument handling |
+
+---
+
+## Usage
+
+### Align two raw sequences
+
+# Needleman-Wunsch global alignment (the classic textbook benchmark) (MATCH = 1, MISMATCH = -1, GAP = -1)
+seqviz --seq1 GATTACA --seq2 GCATGCU --algorithm nw
+
+
+──────────────────── Needleman-Wunsch (Global) ─────────────────────
+Score: 0
+G-ATTACA
+GCA-TGCU
+
+---
+
+# Smith-Waterman local alignment (MATCH = 2, MISMATCH = -1, GAP = -1)
+seqviz --seq1 ACACACTA --seq2 AGCACACA --algorithm sw
+
+────────────────────── Smith-Waterman (Local) ──────────────────────
+Score: 12
+A-CACACTA
+AGCACAC-A
+
+---
+
+### Align from FASTA files (MATCH = 1, MISMATCH = -1, GAP = -1)
+
+# Global alignment of two real cytochrome b gene sequences
+seqviz --file1 examples/gallus_gallus_cytb.fasta \
+       --file2 examples/columba_livia_cytb.fasta \
+       --algorithm nw \
+       --output results/chicken_vs_pigeon.png
+
+──────────────────── Needleman-Wunsch (Global) ─────────────────────
+Score: 221
+AGCATGATGAAA-TTTCGGCTCCCTATTA-GCAGTCTGCCT-CATGACCCAAATCCTCACCGGCCTAC
+TACTAGCCATGCAC--TACACAGCAGACA-CATCCCTAGCCTTCTCCTCCGTAGCCCACACTTGCCGG
+AACGTACAATACGGCTGACTCATCCGGAATCTCCACGCAAACGGCGCCTCATTCTTCTTCATCTGTAT
+CTT-CCTTCACATCGGACGAGGCCTATACTACGGCTCCTACCTCTACAAGGAAACCTGAAACACAGGA
+GTAATCCTCCTCCTCACACTCATAGCCACCGCCTTTGTGGGCTATGTTCT-CCCATGAGGACAAATA
+AGCATGATGAAACTTT-GGGTCCCTACTAGGCA-TTTGCTTGC-TAACTCAAATCCTAACCGGCTTAC
+TACTCGCC--GCACATTACACTGCAGACACCA-CCCTAGCCTTTTCATCCGTTGCACACACATGCCGA
+AACGTACAGTACGGCTGGCTAATCCGAAACCTCCATGCAAACGGAGCCTCATTTTTCTTCATCTGTAT
+-TTACCTACACATCGGACGAGGACTCTACTACGGATCCTACCTCTACAAAGAGACTTGAAACACAGGA
+GTCGTCCTCCTACTAACCCTTATAGCCACTGCATTCGTAGGATATGTCCTACCC-TGAGGACAAATA
+
+  Heatmap saved → /Users/ryanyoung/Documents/GitHub/SeqViz/results/chicken_vs_pigeon.png
+
+---
+
+### Run both algorithms side by side
+
+seqviz --file1 examples/gallus_gallus_cytb.fasta \
+       --file2 examples/coturnix_japonica_cytb.fasta \
+       --algorithm both \
+       --output results/comparison.png
+
+---
+
+### Full options reference
+
+Options:
+  --seq1        TEXT     First sequence as a raw string
+  --seq2        TEXT     Second sequence as a raw string
+  --file1       PATH     FASTA file for sequence 1
+  --file2       PATH     FASTA file for sequence 2
+  --algorithm   TEXT     nw · sw · both  [default: nw]
+  --match       INT      Match score     [default: 1]
+  --mismatch    INT      Mismatch penalty [default: -1]
+  --gap         INT      Gap penalty     [default: -1]
+  --output      PATH     Save heatmap to this path
+  --help                 Show this message and exit
+
+---
+
+## Screenshots
+
+### Heatmap — Gallus gallus vs Columba livia (cytochrome b, NW)
+
+> *(replace with your actual heatmap output from Day 7–8)*
+
+![Heatmap example](docs/assets/heatmap_nw_example.png)
+
+The colour gradient runs from **dark blue** (low / negative score) through
+**white** (neutral) to **dark red** (high match score). The diagonal streak
+of warm colours shows the path of highest similarity — the optimal global
+alignment path traced by the Needleman-Wunsch algorithm.
+
+---
+
+### Terminal output
+
+> *(replace with a screenshot from your terminal)*
+
+![Terminal output](docs/assets/terminal_example.png)
+
+---
+
+## Background — Needleman-Wunsch vs Smith-Waterman
+
+Both algorithms solve the same core problem — given two sequences, find the
+arrangement of matches, mismatches, and gaps that produces the best possible
+score under a chosen scoring scheme — but they answer slightly different
+biological questions.
+
+**Needleman-Wunsch (1970)** performs *global* alignment. It is forced to align
+every character in both sequences from end to end, even if the terminal regions
+are poorly conserved. The algorithm fills an `(m+1) × (n+1)` scoring matrix
+where the first row and column are initialised with cumulative gap penalties,
+and every cell takes the maximum of three possible moves: diagonal (match or
+mismatch), up (gap in sequence 2), or left (gap in sequence 1). The final
+alignment score sits in the bottom-right corner of the matrix, and the optimal
+alignment is recovered by tracing back from that corner. NW is the right choice
+when you expect both sequences to be homologous across their full length — for
+example, comparing the same gene between two species.
+
+**Smith-Waterman (1981)** performs *local* alignment. It finds the highest-
+scoring contiguous sub-region of similarity between the two sequences and
+ignores poorly-matching flanking regions entirely. The key difference is two
+rules added to the NW recurrence: all matrix cells floor at zero (no cell can
+go negative), and the traceback starts from the cell with the *highest value
+anywhere in the matrix*, stopping the moment it reaches a zero. This means
+unrelated sequence on either side of a conserved domain does not drag the score
+down. SW is the right choice when you are searching for a conserved domain
+within longer, divergent sequences.
+
+In practice: if NW and SW return the same alignment for a given pair of
+sequences, it means the two sequences are well-conserved across their entire
+length — which is expected for a gene as constrained as cytochrome b.
+
+Both algorithms use the same user-configurable scoring scheme, found in scoring.py:
+
+| Event | Default score | Biological meaning |
+|---|---|---|
+| Match | +1 | Same nucleotide at this position |
+| Mismatch | -1 | Different nucleotide — possible point mutation |
+| Gap | -1 | Insertion or deletion event (indel) |
+
+---
+
+## Example Data
+
+The `examples/` directory contains real cytochrome b (MT-CYB) gene sequences
+downloaded from NCBI for four bird species, chosen to span a range of
+evolutionary distances:
+
+| File | Species | NCBI Accession | Order |
+|---|---|---|---|
+| `gallus_gallus_cytb.fasta` | Chicken | KF964328 | Galliformes |
+| `coturnix_japonica_cytb.fasta` | Japanese quail | KF964327 | Galliformes |
+| `columba_livia_cytb.fasta` | Rock pigeon | KF964326 | Columbiformes |
+| `streptopelia_senegalensis_cytb.fasta` | Laughing dove | KF964325 | Columbiformes |
+
+The chicken–quail pair (same order) shows higher sequence similarity than
+the chicken–pigeon pair (different orders, ~90 million years of divergence),
+which is visible in the heatmap colour gradient without any additional analysis.
+
+To re-download these sequences from NCBI:
+
+python scripts/download_examples.py
+
+---
+
+## Running Tests
+
+# Full test suite with coverage
+pytest -v
+
+# FASTA parsing tests only
+pytest tests/test_fasta.py -v
+
+# Alignment algorithm tests only
+pytest tests/test_alignment.py -v
+
+# Stop at first failure
+pytest -v -x
+
+---
+
+## Project Structure
+
+SeqViz/
+├── src/seqviz/
+│   ├── cli.py              # Typer CLI entry point
+│   ├── needleman_wunsch.py # NW matrix fill + traceback
+│   ├── smith_waterman.py   # SW matrix fill + traceback
+│   ├── fasta_utils.py      # FASTA parsing (Biopython-backed)
+│   ├── scoring.py          # Shared scoring function + defaults
+│   └── visualisation.py    # Heatmap and terminal rendering
+├── tests/
+│   ├── test_alignment.py
+│   ├── test_fasta.py
+│   └── fixtures/           # Synthetic FASTA files for testing
+├── examples/               # Real NCBI cytochrome b sequences
+├── scripts/
+│   └── download_examples.py
+└── pyproject.toml
+
+---
+
+## Future Plans
+
+- **BLOSUM62 support** — extend to protein sequence alignment using the
+  standard substitution matrix used in BLAST, enabling amino acid-level
+  comparison in addition to nucleotide alignment
+- **Multiple sequence alignment** — align more than two sequences
+  simultaneously using progressive alignment (ClustalW-style), a natural
+  extension once pairwise alignment is solid
+- **Web interface** — a lightweight FastAPI or Streamlit front end so the
+  tool can be used without installing anything locally; relevant for
+  sharing with wet-lab collaborators
+- **Affine gap penalties** — replace the current linear gap penalty with a
+  gap-open + gap-extend model, which is biologically more realistic (a
+  single long indel is more likely than many short ones)
+- **E-value estimation** — add statistical significance scoring so users
+  know whether an alignment score is meaningful or could arise by chance,
+  bringing SeqViz closer to BLAST-level reporting
+
+---
+
+## Author
+
+**Ryan Young** — Zoologist transitioning to bioinformatics.
+
+[GitHub](https://github.com/BarefootRobber/SeqViz) ·
+[Issues](https://github.com/BarefootRobber/SeqViz/issues)
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
