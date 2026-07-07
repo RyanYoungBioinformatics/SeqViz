@@ -1,6 +1,6 @@
 MATCH = 1
 MISMATCH = -1
-GAP = -2
+GAP = -1
 
 def scoring(a: str, b: str, match: int = MATCH, mismatch: int = MISMATCH) -> int:
     """

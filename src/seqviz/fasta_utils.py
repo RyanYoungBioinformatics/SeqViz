@@ -49,7 +49,7 @@ def read_fasta(filepath: str, validate: bool = True) -> str:
             f"Using only the first: '{record.id}'"
         )
 
-    sequence = str(record.seq).upper()
+    sequence = "".join(str(record.seq).upper().split())
 
     if len(sequence) == 0:
         raise ValueError(f"Record '{record.id}' has an empty sequence body.")
@@ -94,10 +94,10 @@ def get_fasta_metadata(filepath: str) -> dict:
 
     record = records[0]
     return {
-        "id": record.id,
+        "id":          record.id,
         "description": record.description,
-        "length": len(record.seq),
-        "gc_content": _gc_content(str(record.seq)),
+        "length":      len(record.seq),
+        "gc_content":  _gc_content(str(record.seq)),
         "num_records": len(records),
     }
 
