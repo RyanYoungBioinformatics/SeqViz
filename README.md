@@ -142,22 +142,11 @@ alignment path traced by the Needleman-Wunsch algorithm.
 
 ## Background — Needleman-Wunsch vs Smith-Waterman
 
-Both algorithms solve the same core problem — given two sequences, find the
-arrangement of matches, mismatches, and gaps that produces the best possible
-score under a chosen scoring scheme — but they answer slightly different
-biological questions.
+These algorithms both function as pairwise sequence alignment tools, with a subtle difference between them. Needleman-Wunsch (nw) is allowed to consider negative scores when filling the matrix and the Smith-Waterman (sw) algorithm floors the lowest score to 0. This is what allows the sw algorithm to find the best local alignment between two sequences, by flooring the score sw essentially ignores the areas of the sequences that do not match, only highlighting the regions of high similarity. In contrast the nw algorithim is forced to consider every pairwise cell and assign a score to it, so it can be traced back to the origin cell of the matrix.
 
-**Needleman-Wunsch (1970)** performs *global* alignment. It is forced to align
-every character in both sequences from end to end, even if the terminal regions
-are poorly conserved. The algorithm fills an `(m+1) × (n+1)` scoring matrix
-where the first row and column are initialised with cumulative gap penalties,
-and every cell takes the maximum of three possible moves: diagonal (match or
-mismatch), up (gap in sequence 2), or left (gap in sequence 1). The final
-alignment score sits in the bottom-right corner of the matrix, and the optimal
-alignment is recovered by tracing back from that corner. NW is the right choice
-when you expect both sequences to be homologous across their full length — for
-example, comparing the same gene between two species.
+Nw was created in the 1970s to perform global alignment of two sequences. It fills the matrix in an `(m+1) × (n+1)` where the intial row and column of each sequence is filled with cumulative gap penalties, from there every cell takes the maxximum of three possible scores; Match, being the highest scoring option for matching nucleotides at that position, Mismatch, the opposite score of the match normally (these occur when the maximum score is sourced from the top left cell). Gap penalties, usually -1 which represents an insert or deletion from sequence 1 (highest score comes from the cell to the left), or sequence 2 (highest score is sourced from the top cell). Optimal alignment is found by tracing back the matrix from the bottom left hand corner to the top right hand corner following the source of each cell.
 
+Sw was created in 1981 in order to perform local alignment between two sequences. ***-----PICK UP HERE--------***
 **Smith-Waterman (1981)** performs *local* alignment. It finds the highest-
 scoring contiguous sub-region of similarity between the two sequences and
 ignores poorly-matching flanking regions entirely. The key difference is two
