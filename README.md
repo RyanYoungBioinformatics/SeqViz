@@ -136,9 +136,7 @@ alignment path traced by the Needleman-Wunsch algorithm.
 
 ### Terminal output
 
-> *(replace with a screenshot from your terminal)*
-
-![Terminal output](docs/assets/terminal_example.png)
+![Terminal output](/README_screenshots/chicken_vs_pigeon_terminal.png)
 
 ---
 
