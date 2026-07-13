@@ -212,22 +212,47 @@ pytest -v -x
 
 ## Project Structure
 ```
-SeqViz/
-├── src/seqviz/
-│   ├── cli.py              # Typer CLI entry point
-│   ├── needleman_wunsch.py # NW matrix fill + traceback
-│   ├── smith_waterman.py   # SW matrix fill + traceback
-│   ├── fasta_utils.py      # FASTA parsing
-│   ├── scoring.py          # Shared scoring function + defaults
-│   └── visualisation.py    # Heatmap and terminal rendering
-├── tests/
-│   ├── test_alignment.py
-│   ├── test_fasta.py
-│   └── fixtures/           ***# Synthetic FASTA files for testing***
-├── examples/               # Real NCBI cytochrome b sequences
-├── scripts/
-│   └── download_examples.py
-└── pyproject.toml
+├── LICENSE
+├── README.md
+├── pyproject.toml
+├── README_screenshots
+│   ├── chicken_vs_pigeon.png
+│   └── chicken_vs_pigeon_terminal.png
+├── examples
+│   ├── columba_livia_cytb.fasta
+│   ├── coturnix_japonica_cytb.fasta
+│   ├── gallus_gallus_cytb.fasta
+│   └── streptopelia_senegalensis_cytb.fasta
+├── src
+│   └── seqviz
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── algorithms
+│       │   ├── __init__.py
+│       │   ├── __pycache__
+│       │   │   ├── __init__.cpython-312.pyc
+│       │   │   ├── needleman_wunsch.cpython-312.pyc
+│       │   │   └── smith_waterman.cpython-312.pyc
+│       │   ├── needleman_wunsch.py
+│       │   └── smith_waterman.py
+│       ├── cli.py
+│       ├── download_examples.py
+│       ├── fasta_utils.py
+│       ├── scoring.py
+│       └── visualise
+│           ├── __init__.py
+│           ├── heatmap.py
+│           └── terminal.py
+└── tests
+    ├── fixtures
+    │   ├── empty.fasta
+    │   ├── invalid_chars.fasta
+    │   ├── multi_record.fasta
+    │   ├── multiline.fasta
+    │   ├── no_header.fasta
+    │   └── valid.fasta
+    ├── test_alignment.py
+    └── test_fasta.py
 ```
 ---
 
