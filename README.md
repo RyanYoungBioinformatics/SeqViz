@@ -20,22 +20,26 @@ SeqViz is capable of taking two seperate DNA sequences, either typed into the te
 **Requirements:** Python 3.11 or higher.
 
 # 1. Clone the repository
+```bash
 git clone https://github.com/BarefootRobber/SeqViz.git
 cd SeqViz
-
+```
 # 2. Create and activate a virtual environment (recommended)
+```bash
 python -m venv .venv
 source .venv/bin/activate        # macOS / Linux
 .venv\Scripts\activate           # Windows
-
+```
 # 3. Install SeqViz and all dependencies
+```bash
 pip install -e ".[dev]"
-
+```
 # 4. Confirm the install worked
+```bash
 seqviz --help
-
+```
 **Dependencies installed automatically:**
-
+```
 | Package | Purpose |
 |---|---|
 | `biopython` | FASTA file parsing |
@@ -43,7 +47,7 @@ seqviz --help
 | `matplotlib` + `seaborn` | Heatmap rendering |
 | `rich` | Formatted terminal output |
 | `click` | CLI argument handling |
-
+```
 ---
 
 ## Usage
@@ -51,34 +55,39 @@ seqviz --help
 ### Align two raw sequences
 
 # Needleman-Wunsch global alignment (the classic textbook benchmark) (MATCH = 1, MISMATCH = -1, GAP = -1)
+```bash
 seqviz --seq1 GATTACA --seq2 GCATGCU --algorithm nw
-
-
+```
+```
 ──────────────────── Needleman-Wunsch (Global) ─────────────────────
 Score: 0
 G-ATTACA
 GCA-TGCU
-
+```
 ---
 
 # Smith-Waterman local alignment (MATCH = 2, MISMATCH = -1, GAP = -1)
+```bash
 seqviz --seq1 ACACACTA --seq2 AGCACACA --algorithm sw
-
+```
+```
 ────────────────────── Smith-Waterman (Local) ──────────────────────
 Score: 12
 A-CACACTA
 AGCACAC-A
-
+```
 ---
 
 ### Align from FASTA files (MATCH = 1, MISMATCH = -1, GAP = -1)
 
 # Global alignment of two real cytochrome b gene sequences
+```bash
 seqviz --file1 examples/gallus_gallus_cytb.fasta \
        --file2 examples/columba_livia_cytb.fasta \
        --algorithm nw \
        --output results/chicken_vs_pigeon.png
-
+```
+```
 ──────────────────── Needleman-Wunsch (Global) ─────────────────────
 Score: 221
 AGCATGATGAAA-TTTCGGCTCCCTATTA-GCAGTCTGCCT-CATGACCCAAATCCTCACCGGCCTAC
@@ -93,20 +102,20 @@ AACGTACAGTACGGCTGGCTAATCCGAAACCTCCATGCAAACGGAGCCTCATTTTTCTTCATCTGTAT
 GTCGTCCTCCTACTAACCCTTATAGCCACTGCATTCGTAGGATATGTCCTACCC-TGAGGACAAATA
 
   Heatmap saved → /Users/ryanyoung/Documents/GitHub/SeqViz/results/chicken_vs_pigeon.png
-
+```
 ---
 
 ### Run both algorithms side by side
-
+```bash
 seqviz --file1 examples/gallus_gallus_cytb.fasta \
        --file2 examples/coturnix_japonica_cytb.fasta \
        --algorithm both \
        --output results/comparison.png
-
+```
 ---
 
 ### Full options reference
-
+```
 Options:
   --seq1        TEXT     First sequence as a raw string
   --seq2        TEXT     Second sequence as a raw string
@@ -118,7 +127,7 @@ Options:
   --gap         INT      Gap penalty     [default: -1]
   --output      PATH     Save heatmap to this path
   --help                 Show this message and exit
-
+```
 ---
 
 ## Screenshots
@@ -176,46 +185,50 @@ the chicken–pigeon pair (different orders, ~90 million years of divergence),
 which is visible in the heatmap colour gradient without any additional analysis.
 
 To re-download these sequences from NCBI:
-'''bash
+```bash
 python scripts/download_examples.py
-'''
+```
 ---
 
 ## Running Tests
 
 # Full test suite with coverage
+```bash
 pytest -v
-
+```
 # FASTA parsing tests only
+```shell
 pytest tests/test_fasta.py -v
-
+```
 # Alignment algorithm tests only
+```bash
 pytest tests/test_alignment.py -v
-
+```
 # Stop at first failure
+```shell
 pytest -v -x
-
+```
 ---
 
 ## Project Structure
-
+```
 SeqViz/
 ├── src/seqviz/
 │   ├── cli.py              # Typer CLI entry point
 │   ├── needleman_wunsch.py # NW matrix fill + traceback
 │   ├── smith_waterman.py   # SW matrix fill + traceback
-│   ├── fasta_utils.py      # FASTA parsing (Biopython-backed)
+│   ├── fasta_utils.py      # FASTA parsing
 │   ├── scoring.py          # Shared scoring function + defaults
 │   └── visualisation.py    # Heatmap and terminal rendering
 ├── tests/
 │   ├── test_alignment.py
 │   ├── test_fasta.py
-│   └── fixtures/           # Synthetic FASTA files for testing
+│   └── fixtures/           ***# Synthetic FASTA files for testing***
 ├── examples/               # Real NCBI cytochrome b sequences
 ├── scripts/
 │   └── download_examples.py
 └── pyproject.toml
-
+```
 ---
 
 ## Future Plans
