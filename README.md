@@ -146,20 +146,7 @@ These algorithms both function as pairwise sequence alignment tools, with a subt
 
 Nw was created in the 1970s to perform global alignment of two sequences. It fills the matrix in an `(m+1) × (n+1)` where the intial row and column of each sequence is filled with cumulative gap penalties, from there every cell takes the maxximum of three possible scores; Match, being the highest scoring option for matching nucleotides at that position, Mismatch, the opposite score of the match normally (these occur when the maximum score is sourced from the top left cell). Gap penalties, usually -1 which represents an insert or deletion from sequence 1 (highest score comes from the cell to the left), or sequence 2 (highest score is sourced from the top cell). Optimal alignment is found by tracing back the matrix from the bottom left hand corner to the top right hand corner following the source of each cell.
 
-Sw was created in 1981 in order to perform local alignment between two sequences. ***-----PICK UP HERE--------***
-**Smith-Waterman (1981)** performs *local* alignment. It finds the highest-
-scoring contiguous sub-region of similarity between the two sequences and
-ignores poorly-matching flanking regions entirely. The key difference is two
-rules added to the NW recurrence: all matrix cells floor at zero (no cell can
-go negative), and the traceback starts from the cell with the *highest value
-anywhere in the matrix*, stopping the moment it reaches a zero. This means
-unrelated sequence on either side of a conserved domain does not drag the score
-down. SW is the right choice when you are searching for a conserved domain
-within longer, divergent sequences.
-
-In practice: if NW and SW return the same alignment for a given pair of
-sequences, it means the two sequences are well-conserved across their entire
-length — which is expected for a gene as constrained as cytochrome b.
+Sw was created in 1981 in order to perform local alignment between two sequences. It is a derivetive from the nw allgorithim with an elegant change in logic. It floors all cell scores to 0, meaning no cell can ever be negative, this change means that the conserved region of the sequences will not be missed due to the less conserved regions around them. The traceback in a sw algorithim also starts from the highest scoring cell, back up and left until the nearest 0 cell is reached.
 
 Both algorithms use the same user-configurable scoring scheme, found in scoring.py:
 
@@ -189,9 +176,9 @@ the chicken–pigeon pair (different orders, ~90 million years of divergence),
 which is visible in the heatmap colour gradient without any additional analysis.
 
 To re-download these sequences from NCBI:
-
+'''bash
 python scripts/download_examples.py
-
+'''
 ---
 
 ## Running Tests
