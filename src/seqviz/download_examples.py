@@ -1,8 +1,6 @@
-# scripts/download_examples.py
 """
 One-time script to download cytochrome b sequences from NCBI.
 Run this once to populate your examples/ folder.
-Accessions from: Awad et al. (2015) Iran J Vet Res 16(2):218-222
 """
 
 from Bio import Entrez, SeqIO
