@@ -11,7 +11,7 @@ Python · Needleman-Wunsch · Smith-Waterman · Biopython · Matplotlib
 ---
 
 ## What It Does
-SeqViz is capable of taking two seperate DNA sequences, either typed into the terminal or loaded from standard .fasta files. Then aligning these sequences using two well known, and tested, algorithms in bioinformatics. It then renders a heatmap image to visualise the difference between your sequences as a heatmap image and prints the alignment to your terminal for quick and easy visual identification of where the match/mismatch and gaps are and how strong the connection is between DNA sequences. You can compare two genes from the same species, or track evolotionary divergence of two seperate species using cytochrome b with this tool. SeqViz gives a numerical and visual answer to you with a simple command in your terminal and does it locally.
+SeqViz is capable of taking two seperate DNA sequences, either typed into the terminal or loaded from standard .fasta files. Then aligning these sequences using two well known, and tested, algorithms in bioinformatics. It then renders a heatmap image to visualise the difference between your sequences as a heatmap, and prints the alignment to your terminal for quick and easy visual identification of where the match/mismatch and gaps are and how strong the overlap is between DNA sequences. You can compare two genes from the same species, or track evolotionary divergence of two seperate species using cytochrome b with this tool, for example. SeqViz gives a numerical and visual answer to you with a simple command in your terminal, and does it locally.
 
 ---
 
@@ -21,7 +21,7 @@ SeqViz is capable of taking two seperate DNA sequences, either typed into the te
 
 # 1. Clone the repository
 ```bash
-git clone https://github.com/BarefootRobber/SeqViz.git
+git clone https://github.com/RyanYoungBioinformatics/SeqViz.git
 cd SeqViz
 ```
 # 2. Create and activate a virtual environment (recommended)
@@ -278,10 +278,10 @@ pytest -v -x
 
 ## Author
 
-**Ryan Young** — Zoologist transitioning to bioinformatics.
+**Ryan Young** — Entomologist transitioning to bioinformatics.
 
-[GitHub](https://github.com/BarefootRobber/SeqViz) ·
-[Issues](https://github.com/BarefootRobber/SeqViz/issues)
+[GitHub](https://github.com/RyanYoungBioinformatics/SeqViz) ·
+[Issues](https://github.com/RyanYoungBioinformatics/SeqViz/issues)
 
 ---
 
