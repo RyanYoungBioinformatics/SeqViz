@@ -2,7 +2,6 @@
 FASTA file parsing utilities.
 Wraps BioPython's SeqIO with bioinformatics-appropriate validation.
 """
-
 import os
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
